@@ -1,9 +1,20 @@
 package services
 
 import (
-	"fmt"
+	"github.com/thepralad/socialnetwork/internal/models"
+	"github.com/thepralad/socialnetwork/pkg/security"
 )
 
-func RegisterUser(email string, password string) string{
-	return fmt.Sprintf("User registered as: %s | %s", email, password)
+type UserService struct{
+	userStore models.UserStore
+}
+
+func NewUserService(store models.UserStore) *UserService{
+	return &UserService{userStore: store}
+}
+
+func (s *UserService) RegisterUser(email, password string) error{
+	hashedPassword, _ := security.HashPassword(password)
+	s.userStore.CreateUser(email, hashedPassword)
+	return nil
 }
