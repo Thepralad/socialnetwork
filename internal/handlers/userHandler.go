@@ -2,6 +2,7 @@ package handlers
 
 import(
 	"net/http"
+	"log"
 	"github.com/thepralad/socialnetwork/internal/models"
 	"github.com/thepralad/socialnetwork/internal/services"
 	"github.com/thepralad/socialnetwork/pkg/render"
@@ -19,20 +20,25 @@ func NewUserHandler(store models.UserStore) *UserHandler{
 func (h *UserHandler) HomeHandler(res http.ResponseWriter, req *http.Request){
 	http.Redirect(res, req, "/register", http.StatusFound)
 }
+
 func (h *UserHandler) RegisterUser(res http.ResponseWriter, req *http.Request){
+	//GET
 	if req.Method == http.MethodGet{
 		render.Template(res, "index", nil)
 		return
 	}
 
+	//POST
 	if req.Method == http.MethodPost{
-
 		email := req.FormValue("email")
 		password := req.FormValue("password")
 		
-		h.userService.RegisterUser(email, password)
+		message, err := h.userService.RegisterUser(email, password)
+		if err != nil{
+			log.Print(err)
+		}
 
-		res.Write([]byte("check your email"))
+		res.Write([]byte(message))
 	}
 }
 

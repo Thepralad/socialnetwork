@@ -1,14 +1,11 @@
 package models
 
-import (
-	"time"
-)
 
 type User struct {
 	ID int64
 	Email string
 	Password string
-	CreatedAt time.Time
+	CreatedAt string
 }
 
 type UserStore interface {
