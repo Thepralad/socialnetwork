@@ -73,5 +73,5 @@ func (h *UserHandler) VerifyHandler(res http.ResponseWriter, req *http.Request) 
 	if err := h.userService.VerifyUser(token); err != nil {
 		log.Fatal(err)
 	}
-	res.Write([]byte("User verified!"))
+	render.Template(res, "verified", nil)
 }
