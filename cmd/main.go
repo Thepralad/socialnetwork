@@ -21,6 +21,7 @@ func main(){
 
 	mux := http.NewServeMux()
 	
+	mux.HandleFunc("/", handler.HomeHandler)
 	mux.HandleFunc("/register", handler.RegisterUser)
 	
 	log.Print("starting server at :8080")
