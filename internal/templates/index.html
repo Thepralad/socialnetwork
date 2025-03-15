@@ -7,11 +7,12 @@
  	<script src="https://unpkg.com/htmx.org@2.0.4"></script>
 </head>
 <body>
-	<form hx-post="/register" hx-swap="innerHTML" hx-target=".server-message">
+	<h2>Register</h2>
+	<form hx-post="/register" hx-swap="innerHTML" hx-target=".register-message">
 		<input type="email" name="email">
 		<input type="password" name="password">
 		<button type="submit">Register</button>
 	</form>	
-	<p class="server-message"></p>
+	<p class="register-message"></p>
 </body>
 </html>

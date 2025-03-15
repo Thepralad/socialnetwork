@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<script src="https://unpkg.com/htmx.org@2.0.4"></script>
+	<title>Document</title>
+</head>
+<body>
+	<h2>Login</h2>
+	<form hx-post="/login" hx-swap="innerHTML" hx-target=".login-message">
+		<input type="email" name="email">
+		<input type="password" name="password">
+		<button type="submit">Login</button>
+	</form>	
+	<p class="login-message"></p>
+</body>
+</html>
