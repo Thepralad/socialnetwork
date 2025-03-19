@@ -9,6 +9,7 @@ type MySQLUserStore struct{
 	DB *sql.DB
 }
 
+//-----USER-----
 func (m *MySQLUserStore) CreateUser(email string, password string, token string) (int64, error){
 	query := "INSERT INTO users(email, password, created_at, token) VALUES(?,?,?,?)"
 	result, err := m.DB.Exec(query, email, password, time.Now(), token)
@@ -27,6 +28,14 @@ func (m *MySQLUserStore) GetUserByEmail(email string) (*User, error){
 	}
 	return &user, nil
 }
+func (m *MySQLUserStore) SetSessionToken(email, token string) error{
+	query := "INSERT INTO sessions (email, token) VALUES (?, ?)"
+	_, err := m.DB.Exec(query, email, token)
+	if err != nil{
+		return err
+	}
+	return nil
+}
 
 func (m *MySQLUserStore) VerifyUserByToken(token string) error{
 	query := "UPDATE users SET verified = 1 WHERE token = ?"
@@ -35,4 +44,15 @@ func (m *MySQLUserStore) VerifyUserByToken(token string) error{
 		return err
 	}
 	return nil
+}
+
+//-----POSTS-----
+func (m *MySQLUserStore) GetEmailFromToken(token string) (string, error){
+	var email string
+	query := "SELECT email FROM sessions WHERE token = ?"
+	err := m.DB.QueryRow(query, token).Scan(&email)
+	if err != nil{
+		return "", err
+	}
+	return email, err
 }

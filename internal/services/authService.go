@@ -2,6 +2,7 @@ package services
 
 import (
 	"log"
+	"net/http"
 
 	"github.com/thepralad/socialnetwork/internal/models"
 	"github.com/thepralad/socialnetwork/pkg/mail"
@@ -9,16 +10,16 @@ import (
 	"github.com/thepralad/socialnetwork/pkg/token"
 )
 
-type UserService struct {
+type AuthService struct {
 	userStore models.UserStore
 }
 
-func NewUserService(store models.UserStore) *UserService {
-	return &UserService{userStore: store}
+func NewAuthService(store models.UserStore) *AuthService {
+	return &AuthService{userStore: store}
 }
 
 // Business logic for Registering user - Returns the status message
-func (s *UserService) RegisterUser(email, password string) (string, error) {
+func (s *AuthService) RegisterUser(email, password string) (string, error) {
 	//Checks if user already exists
 	userAlreadyExist, err := s.userStore.GetUserByEmail(email)
 	if userAlreadyExist != nil {
@@ -32,7 +33,7 @@ func (s *UserService) RegisterUser(email, password string) (string, error) {
 
 	//Encrypting password using bcrypt
 	hashedPassword, _ := security.HashPassword(password)
-	verificationToken := token.GenerateVerificationToken()
+	verificationToken := token.GenerateToken()
 	//If no above condition is met, the email and password in inserted to the DB
 	s.userStore.CreateUser(email, hashedPassword, verificationToken)
 	message := "http://localhost:8080/verify?token=" + verificationToken
@@ -45,7 +46,7 @@ func (s *UserService) RegisterUser(email, password string) (string, error) {
 }
 
 // Business logic for Logging in user - Returns the status message
-func (s *UserService) LoginUser(email, password string) (string, error) {
+func (s *AuthService) LoginUser(email, password string) (string, error) {
 	user, err := s.userStore.GetUserByEmail(email)
 	if err != nil {
 		return "User does not exists", nil
@@ -61,8 +62,34 @@ func (s *UserService) LoginUser(email, password string) (string, error) {
 	return "user logged in successfully", nil
 }
 
+func (s *AuthService) AddSessionToken(email string, res http.ResponseWriter) {
+	sessionToken := token.GenerateToken()
+
+	// Set Token in the DB with the email address
+	err := s.userStore.SetSessionToken(email, sessionToken)
+	if err != nil {
+		log.Printf("Failed to set session token: %v", err)
+		return
+	}
+
+	//Set Cookie with proper attributes
+	http.SetCookie(res, &http.Cookie{
+		Name:     "session_token",
+		Value:    sessionToken,
+		MaxAge:   3600, // 1 hour
+	})
+}
+
+func (s *AuthService) RemoveSessionToken(res http.ResponseWriter){
+	http.SetCookie(res, &http.Cookie{
+		Name:   "session_token",
+		Value:  "",
+		MaxAge: 3600,
+	})
+}
+
 // Business logic for Verifying user - Returns the status message
-func (s *UserService) VerifyUser(token string) error {
+func (s *AuthService) VerifyUser(token string) error {
 	err := s.userStore.VerifyUserByToken(token)
 	if err != nil {
 		return err
