@@ -25,7 +25,14 @@ func (h *AuthHandler) HomeHandler(res http.ResponseWriter, req *http.Request) {
 func (h *AuthHandler) RegisterHandler(res http.ResponseWriter, req *http.Request) {
 	//GET
 	if req.Method == http.MethodGet {
-		token, _ := req.Cookie("session_token")
+		token, err := req.Cookie("session_token")
+		if err != nil{
+			if err := render.Template(res, "login", nil); err != nil {
+				log.Printf("Template error: %v", err)
+				return
+			}
+			return
+		}
 		if token.Value == "" {
 			if err := render.Template(res, "index", nil); err != nil {
 				log.Printf("Template error: %v", err)
@@ -55,8 +62,16 @@ func (h *AuthHandler) RegisterHandler(res http.ResponseWriter, req *http.Request
 func (h *AuthHandler) LoginHandler(res http.ResponseWriter, req *http.Request) {
 	//GET
 	if req.Method == http.MethodGet {
-		token, _ := req.Cookie("session_token")
-		if token.Value == "" {
+		token, err := req.Cookie("session_token")
+
+		if err != nil{
+			if err := render.Template(res, "login", nil); err != nil {
+				log.Printf("Template error: %v", err)
+				return
+			}
+			return
+		}
+		if token.Value == ""{
 			if err := render.Template(res, "login", nil); err != nil {
 				log.Printf("Template error: %v", err)
 				return
