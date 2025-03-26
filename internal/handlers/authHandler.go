@@ -27,7 +27,7 @@ func (h *AuthHandler) RegisterHandler(res http.ResponseWriter, req *http.Request
 	if req.Method == http.MethodGet {
 		token, err := req.Cookie("session_token")
 		if err != nil{
-			if err := render.Template(res, "login", nil); err != nil {
+			if err := render.Template(res, "index", nil); err != nil {
 				log.Printf("Template error: %v", err)
 				return
 			}

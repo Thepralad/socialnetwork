@@ -29,7 +29,7 @@ func main() {
 	postHandler := handlers.NewPostHandler(&store)
 
 	mux := http.NewServeMux()
-
+ 
 	// Serve static files
 	// fs := http.FileServer(http.Dir("internal/static"))
 	// mux.Handle("/static/", http.StripPrefix("/static/", fs))
@@ -41,6 +41,9 @@ func main() {
 	mux.HandleFunc("/logout", authHandler.LogoutHandler)
 	
 	mux.HandleFunc("/home", postHandler.HomePostHandler)
+	mux.HandleFunc("/editprofile", postHandler.EditProfileHandler)
+	mux.HandleFunc("/getposts", postHandler.GetPostHandler)
+	mux.HandleFunc("/post", postHandler.PostHandler)
 
 	log.Print("starting server at :8080")
 	http.ListenAndServe(":8080", mux)

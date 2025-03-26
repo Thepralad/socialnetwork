@@ -6,16 +6,47 @@
 	<title>Home</title>
 </head>
 <body>
-	<h1>Welcome {{.Email}}</h1>
-	<h2>Things you can do here:</h2>
-	<ol>
-		<li>See your friends</li>
-		<li>Poke them</li>
-		<li>Right something and post it</li>
-		<li>Reply on others post</li>
-	</ol>
+	<h1>Welcome {{.Profile.Username}}</h1>
+	<h2>Your information</h2>
+	<div>
+		<img src={{.Profile.ImgURL}}>
+		<p>Dept: <em>{{.Profile.Dept}}</em> </p>
+		<p>Year: <em>{{.Profile.Year}}</em> </p>
+		<p>Email: <em>{{.Profile.Email}}</em> </p>
+		<p>InstagramLink: <em>{{.Profile.InstagramLink}}</em></p>
+		<p>Gender: <em>{{.Profile.Gender}}</em></p>
+		<p>Top Artist: <em>{{.Profile.TopArtist}}</em></p>
+		<p>Relationship Status: <em>{{.Profile.RelationshipStatus}}</em></p>
+		<p>Looking For: <em>{{.Profile.LookingFor}}</em></p>
+	</div>
+	<form action="/editprofile" method="get">
+		<button>Edit</button>
+	</form>
 	<a href="/logout">
 		<button>Logout</button>
-	  </a>
+	</a>
+	<div id="posts-container">
+		<form action="/post" method="post">
+			<textarea name="content">
+				
+			</textarea>
+
+			<button type="submit">Post</button>
+		</form>
+	  {{range .Posts}}
+	  <div class="post">
+	    <p><strong>{{.Email}}</strong>: {{.Content}} ({{.VoteCount}} votes)</p>
+	  </div>
+	  {{end}}
+	</div>
+
+	<div
+	  hx-get="/getposts?offset=20"
+	  hx-trigger="revealed"
+	  hx-target="#posts-container"
+	  hx-swap="beforeend"
+	>
+	  Loading posts...
+	</div>
 </body>
 </html>

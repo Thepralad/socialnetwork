@@ -8,9 +8,23 @@ type User struct {
 	Verified  bool
 	Token     string
 }
+type UserProfile struct {
+    Email            string
+    Username         string
+    InstagramLink    string
+    Gender           string
+    TopArtist        string
+    RelationshipStatus string
+    LookingFor       string
+    FactAboutMe      string
+    Dept 			 string
+    Year 			 string
+    ImgURL 			 string
+}
 
 type UserStore interface {
 	CreateUser(email string, password string, token string) (int64, error)
+	CreateUserProfile(email string) error
 	GetUserByEmail(email string) (*User, error)
 	VerifyUserByToken(token string) error
 	SetSessionToken(email, token string) error

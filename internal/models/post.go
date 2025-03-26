@@ -1,14 +1,18 @@
 package models
 
-type Post struct {
-	ID        int64
-	Email     string
-	Content   string
-	CreatedAt string
-	Metric    int64
-}
 
+type Post struct {
+    ID       int
+    Email    string
+    Content  string
+    VoteCount int
+}
 type PostStore interface {
 	GetEmailFromToken(token string) (string, error)
+	GetProfileFromEmail(email string) (*UserProfile, error)
+	UpdateProfileFromEmail(email string, profile *UserProfile) error
+    GetPosts(offset int) ([]Post, error)
+    Post(email,content string) error
 }
+
 

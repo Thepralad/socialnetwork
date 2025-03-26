@@ -42,6 +42,10 @@ func (s *AuthService) RegisterUser(email, password string) (string, error) {
 	if err != nil {
 		log.Fatal(err)
 	}
+	err = s.userStore.CreateUserProfile(email)
+	if err != nil {
+		log.Print("failed creating profile")
+	}
 	return "Check your email", nil
 }
 

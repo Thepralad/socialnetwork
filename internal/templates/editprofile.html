@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=">
+	<title>Document</title>
+</head>
+<body>
+	<div>
+		<h2>Edit Profile</h2>
+		<form action="/editprofile" method="post">
+			<div>
+				<label for="username">Username</label>
+				<input type="text" name="username" value="{{.Profile.Username}}">
+			</div>
+			<div>
+				<label for="dept">Dept</label>
+				  <select name="dept" value="{{.Profile.Dept}}" >
+				    <option value="BBA" {{if eq .Profile.Dept "BBA"}}selected{{end}}>BBA</option>
+				    <option value="Physics Hon" {{if eq .Profile.Dept "Physics Hon"}}selected{{end}}>Physics Hon</option>
+				    <option value="English" {{if eq .Profile.Dept "English"}}selected{{end}}>English</option>
+				  </select>
+			</div>
+			<div>
+				<label for="year">Year</label>
+				  <select name="year" value="{{.Profile.Year}}" >
+				    <option value="First" {{if eq .Profile.Year "First"}}selected{{end}}>First</option>
+				    <option value="Second" {{if eq .Profile.Year "Second"}}selected{{end}}>Second</option>
+				    <option value="Third" {{if eq .Profile.Year "Third"}}selected{{end}}>Third</option>
+				  </select>
+			</div>
+			<div>
+				<label for="gender">Gender</label>
+				  <select name="gender" value="{{.Profile.Gender}}" >
+				    <option value="Guy" {{if eq .Profile.Gender "Guy"}}selected{{end}} >Guy</option>
+				    <option value="Gal" {{if eq .Profile.Gender "Gal"}}selected{{end}}>Gal</option>
+				    <option value="LGBTQ" {{if eq .Profile.Gender "LGBTQ"}}selected{{end}}>LGBTQ</option>
+				  </select>
+			</div>
+			<div>
+				<label for="relationship_status">Relationship Status</label>
+				  <select name="relationship_status" value="{{.Profile.RelationshipStatus}}">
+				    <option value="Single" {{if eq .Profile.RelationshipStatus "Single"}}selected{{end}}>Single</option>
+				    <option value="Dating" {{if eq .Profile.RelationshipStatus "Dating"}}selected{{end}}>Dating</option>
+				    <option value="IDK" {{if eq .Profile.RelationshipStatus "IDK"}}selected{{end}}>IDK</option>
+				  </select>
+			</div>
+			<div>
+				<label for="top_artist">Top Artist</label>
+				<input type="text" name="top_artist" value="{{.Profile.TopArtist}}">
+			</div>
+			<div>
+				<label for="looking_for" >Looking for</label>
+				  <select name="looking_for" value="{{.Profile.LookingFor}}">
+				    <option value="Girlfriend" {{if eq .Profile.LookingFor "Girlfriend"}}selected{{end}}>Girlfriend</option>
+				    <option value="Boyfriend" {{if eq .Profile.LookingFor "Boyfriend"}}selected{{end}}>Boyfriend</option>
+				    <option value="Random hookup" {{if eq .Profile.LookingFor "Random hookup"}}selected{{end}}>Random Hookup</option>
+				    <option value="God"{{if eq .Profile.LookingFor "God"}}selected{{end}}>God</option>
+				  </select>
+			</div>
+			<div>
+				<p>Facts about me</p>
+				 <textarea id="w3review" name="fact_about_me" rows="4" cols="50" value = "{{.Profile.TopArtist}}">
+                 </textarea>
+			</div>
+
+			<button type="submit">Save</button>
+		</form>
+	</div>
+</body>
+</html>

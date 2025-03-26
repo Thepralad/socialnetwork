@@ -27,3 +27,37 @@ func (store *PostService) AuthorizeUser(token string) (string, error) {
 	}
 	return email, nil
 }
+
+func (store *PostService) Post(email, content string) error{
+	err := store.postStore.Post(email, content)
+	if err != nil{
+		log.Print(err)
+		return err
+	}
+
+	return nil
+
+}
+
+func (store *PostService) GetPostsService(offset int) ([]models.Post, error){
+	return store.postStore.GetPosts(offset)
+}
+
+func (store *PostService) GetProfile(email string) (*models.UserProfile, error) {
+	profile, err := store.postStore.GetProfileFromEmail(email)
+	if err != nil{
+		log.Print(err)
+		return nil, err
+	}
+	return profile, nil
+
+}
+
+func (store *PostService) UpdateProfile(email string, profile *models.UserProfile) error{
+	err := store.postStore.UpdateProfileFromEmail(email, profile)
+	if err != nil{
+		log.Print(err)
+		return err
+	}
+	return nil
+}
