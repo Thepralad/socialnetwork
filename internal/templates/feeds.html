@@ -4,49 +4,98 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Home</title>
+	<link rel="stylesheet" type="text/css" href="static/styles/feeds.css">
 </head>
 <body>
-	<h1>Welcome {{.Profile.Username}}</h1>
-	<h2>Your information</h2>
-	<div>
-		<img src={{.Profile.ImgURL}}>
-		<p>Dept: <em>{{.Profile.Dept}}</em> </p>
-		<p>Year: <em>{{.Profile.Year}}</em> </p>
-		<p>Email: <em>{{.Profile.Email}}</em> </p>
-		<p>InstagramLink: <em>{{.Profile.InstagramLink}}</em></p>
-		<p>Gender: <em>{{.Profile.Gender}}</em></p>
-		<p>Top Artist: <em>{{.Profile.TopArtist}}</em></p>
-		<p>Relationship Status: <em>{{.Profile.RelationshipStatus}}</em></p>
-		<p>Looking For: <em>{{.Profile.LookingFor}}</em></p>
-	</div>
-	<form action="/editprofile" method="get">
-		<button>Edit</button>
-	</form>
-	<a href="/logout">
-		<button>Logout</button>
-	</a>
-	<div id="posts-container">
-		<form action="/post" method="post">
-			<textarea name="content">
-				
-			</textarea>
 
-			<button type="submit">Post</button>
-		</form>
-	  {{range .Posts}}
-	  <div class="post">
-	    <p><strong>{{.Email}}</strong>: {{.Content}} ({{.VoteCount}} votes)</p>
-	  </div>
-	  {{end}}
-	</div>
+	 <div class="header">
+        header
+    </div>
+    <div class="left">
+        <div class="profile">
+            <h3 id="username">@{{.Profile.Username}}</h3>
+            <img src="{{.Profile.ImgURL}}" id="profile-pic" alt="profile picture">
+            <div id="profile-details">
+                <div id="email">
+                    <span class="label"><strong>Email</strong></span>
+                    <span class="data">{{.Profile.Email}}</span>
+                </div>
+                <div id="dept">
+                    <span class="label"><strong>Dept</strong></span>
+                    <span class="data">{{.Profile.Dept}} 🎓 | {{.Profile.Year}} Year</span>
+                </div>
+                <div id="gender">
+                    <span class="label"><strong>Gender</strong></span>
+                    <span class="data">{{.Profile.Gender}}</span>
+                </div>
+                <div id="relationship-status">
+                    <span class="label"><strong>Relatsh</strong></span>
+                    <span class="data">{{.Profile.RelationshipStatus}}</span>
+                </div>
+                <div id="looking-for">
+                    <span class="label"><strong>Looking for</strong></span>
+                    <span class="data">{{.Profile.LookingFor}}</span>
+                </div>
+                <div id="fact-about-me">
+                    <span class="label"><strong>Fact about me</strong></span>
+                    <span class="data">{{.Profile.FactAboutMe}}</span>
+                </div>
+            </div>
 
-	<div
-	  hx-get="/getposts?offset=20"
-	  hx-trigger="revealed"
-	  hx-target="#posts-container"
-	  hx-swap="beforeend"
-	>
-	  Loading posts...
-	</div>
+            <div class="actionBtns">
+                <form action="/editprofile">
+                    <button type="submit" id="editProfileBtn">Edit</button>
+                </form>
+                <form action="/logout">
+                    <button type="submit" id="logoutBtn">Logout</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="mid">
+        <div class="postInput">
+            <form action="/post">
+                <textarea name="content" placeholder="What's going on....."></textarea>
+                <button type="submit">Post</button>
+            </form>
+
+            <div class="post-contents" id="posts-container">
+            	{{range .Posts}}
+
+                <div class="post">
+                    <div class="upper-side">
+                        <img src="{{.ImgURL}}" class="post-profile-pic">
+                        <div>
+                            <p class="post-username">@{{.Username}}</p>
+                            <p class="post-email"><a href="">{{.Email}}</a></p>
+                        </div>
+                    </div>
+                    <p class="post-text">{{.Content}}</p>
+                    <div class="actionBtns">
+                        <button class="upvote">⇧</button>
+                        <p>{{.VoteCount}}</p>
+                        <button class="downvote">⇩</button>
+                    </div>
+                    <p class="post-time">2 hours ago</p>
+                </div>
+
+                {{end}}
+            </div>
+
+            <div
+			  hx-get="/getposts?offset=0"
+			  hx-trigger="revealed"
+			  hx-target="#posts-container"
+			  hx-swap="beforeend"
+				>
+			  Loading posts...
+			</div>
+        </div>
+    </div>  
+
+    <div class="right">
+        right
+    </div>
 </body>
 </html>

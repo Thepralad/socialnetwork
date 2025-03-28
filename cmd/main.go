@@ -30,9 +30,9 @@ func main() {
 
 	mux := http.NewServeMux()
  
-	// Serve static files
-	// fs := http.FileServer(http.Dir("internal/static"))
-	// mux.Handle("/static/", http.StripPrefix("/static/", fs))
+	//Serve static files
+	fs := http.FileServer(http.Dir("internal/static"))
+	mux.Handle("/static/", http.StripPrefix("/static/", fs))
 
 	mux.HandleFunc("/", authHandler.HomeHandler)
 	mux.HandleFunc("/register", authHandler.RegisterHandler)

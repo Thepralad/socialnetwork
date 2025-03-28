@@ -8,6 +8,7 @@ import (
 	"github.com/thepralad/socialnetwork/internal/models"
 	"github.com/thepralad/socialnetwork/internal/services"
 	"github.com/thepralad/socialnetwork/pkg/render"
+	"github.com/thepralad/socialnetwork/pkg/cloudstorage"
 )
 
 type PostHandler struct {
@@ -87,6 +88,10 @@ func (h *PostHandler) EditProfileHandler(res http.ResponseWriter, req *http.Requ
 		dept := req.FormValue("dept")
 		year := req.FormValue("year")
 
+		imgFile, _ , err := req.FormFile("profile_img")
+
+		img_url, _ := cloudstorage.UploadImg(imgFile)
+
 		profile := models.UserProfile{
 			Email:              email,
 			Username:           username,
@@ -97,9 +102,15 @@ func (h *PostHandler) EditProfileHandler(res http.ResponseWriter, req *http.Requ
 			FactAboutMe:        fact_about_me,
 			Dept:				dept,
 			Year: 				year,
+			ImgURL: 			img_url,
 		}
 
-		err := h.postService.UpdateProfile(email, &profile)
+		if img_url == ""{
+			existingUserInfo, _  := h.postService.GetProfile(email)
+			profile.ImgURL = existingUserInfo.ImgURL
+		}
+
+		err = h.postService.UpdateProfile(email, &profile)
 		if err != nil {
 			log.Printf("Error updating profile: %v", err)
 			// Optionally return an error message to frontend

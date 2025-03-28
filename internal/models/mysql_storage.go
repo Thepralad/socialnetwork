@@ -76,18 +76,31 @@ func (m *MySQLUserStore) Post(email,content string) error {
 }
 
 func (m *MySQLUserStore) GetPosts(offset int) ([]Post, error) {
-	query := "SELECT id, email, content, vote_count FROM posts ORDER BY created_at DESC LIMIT 20 OFFSET ?"
+	//query := "SELECT id, email, content, vote_count FROM posts ORDER BY created_at DESC LIMIT 20 OFFSET ?"
+	query := `
+		SELECT 
+	    p.id, 
+	    p.email, 
+	    COALESCE(u.username, 'Unknown') AS username, 
+	    COALESCE(u.img_url, 'default.jpg') AS img_url, 
+	    p.content, 
+	    p.vote_count 
+		FROM posts p
+		LEFT JOIN user_profiles u ON p.email = u.email
+		ORDER BY p.created_at DESC
+		LIMIT 20 OFFSET ?;
+		`
 	rows, err := m.DB.Query(query, offset)
 	if err != nil {
 		return nil, err
 	}
-
+ 
 	defer rows.Close()
 
 	var posts []Post
 	for rows.Next() {
 		var p Post
-		rows.Scan(&p.ID, &p.Email, &p.Content, &p.VoteCount)
+		rows.Scan(&p.ID, &p.Email, &p.Username, &p.ImgURL, &p.Content, &p.VoteCount)
 		posts = append(posts, p)
 	}
 
@@ -127,6 +140,22 @@ func (m *MySQLUserStore) GetProfileFromEmail(email string) (*UserProfile, error)
 	return &profile, nil
 }
 
+func (m *MySQLUserStore) MetricUpdate(action string, post_id int) error {
+	query := ""
+	
+	if action == "up"{
+		query = "UPDATE posts SET vote_count = vote_count + 1  WHERE id = ?;"
+	}else if action == "down"{
+		query = "UPDATE posts SET vote_count = vote_count - 1  WHERE id = ?;"
+	}
+
+	_, err := m.DB.Exec(query, post_id)
+	if err != nil{
+		return err
+	}
+	return nil
+}
+
 func (m *MySQLUserStore) UpdateProfileFromEmail(email string, profile *UserProfile) error {
 	query := `
 	    UPDATE user_profiles
@@ -139,11 +168,12 @@ func (m *MySQLUserStore) UpdateProfileFromEmail(email string, profile *UserProfi
 	        looking_for = ?, 
 	        fact_about_me = ?,
 	        dept = ?,
-	        year = ?
+	        year = ?,
+	        img_url = ?
 	    WHERE email = ?;
 	`
 
-	_, err := m.DB.Exec(query, profile.Username, profile.InstagramLink, profile.Gender, profile.TopArtist, profile.RelationshipStatus, profile.LookingFor, profile.FactAboutMe, profile.Dept, profile.Year, profile.Email)
+	_, err := m.DB.Exec(query, profile.Username, profile.InstagramLink, profile.Gender, profile.TopArtist, profile.RelationshipStatus, profile.LookingFor, profile.FactAboutMe, profile.Dept, profile.Year, profile.ImgURL, profile.Email)
 	if err != nil {
 		return err
 	}

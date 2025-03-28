@@ -4,10 +4,10 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Register - Social Network</title>
-		
+	<link rel="stylesheet" type="text/css" href="static/styles/index.css">
 </head>
 <body>
-	<div class="form-container">
+	<!-- <div class="form-container">
 		<h2>Register</h2>
 		{{if .Error}}
 		<p class="error">{{.Error}}</p>
@@ -27,7 +27,34 @@
 		<div class="login-link">
 			Already have an account? <a href="/login">Login</a>
 		</div>
-	</div>
+	</div> -->
+
+	<div class="container">
+	    <div class="signup-container">
+	      <h1>Join SNET</h1>
+	      <p>Getting in is easy, to an online directory just for the students of Salesian 🎓. <br>Already in? <a href="/login">Log in</a></p>
+	      <form action="/register" method="POST">
+	        <input type="email" name="email" placeholder="e.g. yourname@salesiancollege.net" required>
+	        <input type="password" name="password" placeholder="Password" required>
+	        <!-- <input type="password" name="confirm" placeholder="Confirm" required> -->
+	        <button type="submit">
+				<span class="button-text">Jump in</span>
+				<span class="spinner"></span>
+			</button>
+	      </form>
+	      	{{if .Error}}
+			<p class="error">{{.Error}}</p>
+			{{end}}
+	    </div>
+  	</div>
+
+	<div class="random-imgs">
+	    <img src="static/img/background.png" alt="Image 1">
+	    <img src="static/img/background.png" alt="Image 2">
+	    <img src="static/img/background.png" alt="Image 3">
+	    <img src="static/img/background.png" alt="Image 3">
+	    <img src="static/img/background.png" alt="Image 3">
+	 </div>
 
 	<script>
 		document.getElementById('registerForm').addEventListener('submit', function(e) {

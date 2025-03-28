@@ -4,25 +4,32 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Login - Social Network</title>
+	<link rel="stylesheet" type="text/css" href="static/styles/index.css">
 </head>
 <body>
-	<div class="form-container">
-		<h2>Login</h2>
-		{{if .Error}}
-		<p class="error">{{.Error}}</p>
-		{{end}}
-		<form method="POST" action="/login" id="loginForm">
-			<div class="form-group">
-				<input type="email" name="email" placeholder="Email" required>
-			</div>
-			<div class="form-group">
-				<input type="password" name="password" placeholder="Password" required>
-			</div>
-			<button type="submit">
+	<div class="container">
+	    <div class="signup-container">
+	      <h1 class="login-head">Continue with SNET</h1>
+	      <p>Don't have a Snet account yet? No worries, <a href="signup.html">joining</a> is super easy.</a></p>
+	      <form action="/login" method="POST">
+	        <input type="email" name="email" placeholder="e.g. yourname@salesiancollege.net" required>
+	        <input type="password" name="password" placeholder="Password" required>
+	        <button type="submit">
 				<span class="button-text">Login</span>
 				<span class="spinner"></span>
 			</button>
-		</form>
+	      </form>
+	     	{{if .Error}}
+				<p class="error">{{.Error}}</p>
+			{{end}}
+	    </div>
+  	</div>
+	  <div class="random-imgs">
+	   <img src="static/img/background.png" alt="Image 1">
+	    <img src="static/img/background.png" alt="Image 2">
+	    <img src="static/img/background.png" alt="Image 3">
+	    <img src="static/img/background.png" alt="Image 3">
+	    <img src="static/img/background.png" alt="Image 3">
 	</div>
 
 	<script>

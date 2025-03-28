@@ -2,6 +2,7 @@ package services
 
 import (
 	"log"
+	"net/http"
 
 	"github.com/thepralad/socialnetwork/internal/models"
 )
@@ -38,6 +39,10 @@ func (store *PostService) Post(email, content string) error{
 	return nil
 
 }
+
+// func (store *PostService) UpdateMetric(req *http.Request, string email){
+	
+// }
 
 func (store *PostService) GetPostsService(offset int) ([]models.Post, error){
 	return store.postStore.GetPosts(offset)

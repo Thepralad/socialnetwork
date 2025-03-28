@@ -8,7 +8,12 @@
 <body>
 	<div>
 		<h2>Edit Profile</h2>
-		<form action="/editprofile" method="post">
+		<form action="/editprofile" method="post" enctype="multipart/form-data">
+			<div >
+                <input type="file" name="profile_img">
+                <label for="profilephoto">Profile Photo</label> 
+            </div>
+
 			<div>
 				<label for="username">Username</label>
 				<input type="text" name="username" value="{{.Profile.Username}}">
