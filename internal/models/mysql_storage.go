@@ -12,6 +12,8 @@ type MySQLUserStore struct {
 }
 
 // -----USER-----
+
+// Add a user (email, password, token) to database. [snet.users]
 func (m *MySQLUserStore) CreateUser(email string, password string, token string) (int64, error) {
 	query := "INSERT INTO users(email, password, created_at, token) VALUES(?,?,?,?)"
 	result, err := m.DB.Exec(query, email, password, time.Now(), token)
@@ -21,6 +23,7 @@ func (m *MySQLUserStore) CreateUser(email string, password string, token string)
 	return result.LastInsertId()
 }
 
+// Get *User by using email [snet.users]
 func (m *MySQLUserStore) GetUserByEmail(email string) (*User, error) {
 	var user User
 	query := "SELECT id, email, password, created_at, verified FROM users where email = ?"
@@ -30,6 +33,8 @@ func (m *MySQLUserStore) GetUserByEmail(email string) (*User, error) {
 	}
 	return &user, nil
 }
+
+// Associates a session token with email [snet.sessions]
 func (m *MySQLUserStore) SetSessionToken(email, token string) error {
 	query := "INSERT INTO sessions (email, token) VALUES (?, ?)"
 	_, err := m.DB.Exec(query, email, token)
@@ -39,6 +44,7 @@ func (m *MySQLUserStore) SetSessionToken(email, token string) error {
 	return nil
 }
 
+// Updates the `snet.users.verified` to 1
 func (m *MySQLUserStore) VerifyUserByToken(token string) error {
 	query := "UPDATE users SET verified = 1 WHERE token = ?"
 	_, err := m.DB.Exec(query, token)
@@ -48,6 +54,7 @@ func (m *MySQLUserStore) VerifyUserByToken(token string) error {
 	return nil
 }
 
+// Creates a new row in the [snet.user_profiles] with inital values (username, email)
 func (m *MySQLUserStore) CreateUserProfile(email string) error {
 	query := "INSERT INTO user_profiles (username, email) VALUES(?, ?)"
 	_, err := m.DB.Exec(query, extractUsername(email), email)
@@ -58,7 +65,7 @@ func (m *MySQLUserStore) CreateUserProfile(email string) error {
 	return nil
 }
 
-// extracts the username from the email
+// Extracts the username from the email
 func extractUsername(email string) string {
 	atIndex := strings.Index(email, "@")
 	return email[:atIndex]
@@ -66,6 +73,7 @@ func extractUsername(email string) string {
 
 // -----POSTS-----
 
+// Inserts a new row in [snet.posts] with (email, content)
 func (m *MySQLUserStore) Post(email,content string) error {
 	query := "INSERT INTO posts(email, content) VALUES(?, ?)"
 	_, err := m.DB.Exec(query, email, content) 
@@ -75,8 +83,8 @@ func (m *MySQLUserStore) Post(email,content string) error {
 	return nil
 }
 
+// Retrieves all the data from [snet.posts] & [snet.user_profiles]. (id, email, username, img_url, content, vote_count)
 func (m *MySQLUserStore) GetPosts(offset int) ([]Post, error) {
-	//query := "SELECT id, email, content, vote_count FROM posts ORDER BY created_at DESC LIMIT 20 OFFSET ?"
 	query := `
 		SELECT 
 	    p.id, 
@@ -107,6 +115,7 @@ func (m *MySQLUserStore) GetPosts(offset int) ([]Post, error) {
 	return posts, nil
 }
 
+// Retrieves Email using Token [snet.sessions]
 func (m *MySQLUserStore) GetEmailFromToken(token string) (string, error) {
 	var email string
 	query := "SELECT email FROM sessions WHERE token = ?"
@@ -117,6 +126,7 @@ func (m *MySQLUserStore) GetEmailFromToken(token string) (string, error) {
 	return email, err
 }
 
+// Retrieves *UserProfile using email [snet.user_profiles] 
 func (m *MySQLUserStore) GetProfileFromEmail(email string) (*UserProfile, error) {
 	var profile UserProfile
 	query := `SELECT email, username, instagram_link, gender, top_artist, relationship_status, looking_for, fact_about_me, dept, year, img_url
@@ -140,6 +150,7 @@ func (m *MySQLUserStore) GetProfileFromEmail(email string) (*UserProfile, error)
 	return &profile, nil
 }
 
+// Takes in action(up/down) & postid to update the metric
 func (m *MySQLUserStore) MetricUpdate(action string, post_id int) error {
 	query := ""
 
@@ -156,8 +167,8 @@ func (m *MySQLUserStore) MetricUpdate(action string, post_id int) error {
 	return nil
 }
 
-func (m *MySQLUserStore) GetMetric(post_id int) (int, error) {
 
+func (m *MySQLUserStore) GetMetric(post_id int) (int, error) {
 	var count int 
 
 	query := "SELECT vote_count FROM posts WHERE id = ?"
