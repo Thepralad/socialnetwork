@@ -3,6 +3,7 @@ package services
 import (
 	"log"
 	"net/http"
+	"strconv"
 
 	"github.com/thepralad/socialnetwork/internal/models"
 )
@@ -40,9 +41,19 @@ func (store *PostService) Post(email, content string) error{
 
 }
 
-// func (store *PostService) UpdateMetric(req *http.Request, string email){
-	
-// }
+func (store *PostService) UpdateMetric(req *http.Request) int{
+	postIdStr := req.URL.Query().Get("postid")
+	action := req.URL.Query().Get("action")
+
+	postIdInt, _ := strconv.Atoi(postIdStr)
+	err := store.postStore.MetricUpdate(action, postIdInt)
+	if err != nil {
+		log.Print(err)
+	}
+
+	count, err := store.postStore.GetMetric(postIdInt)
+	return count
+}
 
 func (store *PostService) GetPostsService(offset int) ([]models.Post, error){
 	return store.postStore.GetPosts(offset)

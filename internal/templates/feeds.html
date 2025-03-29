@@ -5,6 +5,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Home</title>
 	<link rel="stylesheet" type="text/css" href="static/styles/feeds.css">
+    <script src="https://unpkg.com/htmx.org@2.0.4"></script>
 </head>
 <body>
 
@@ -56,7 +57,7 @@
     <div class="mid">
         <div class="postInput">
             <form action="/post">
-                <textarea name="content" placeholder="What's going on....."></textarea>
+                <textarea name="content" placeholder="What's going on campus....."></textarea>
                 <button type="submit">Post</button>
             </form>
 
@@ -73,9 +74,9 @@
                     </div>
                     <p class="post-text">{{.Content}}</p>
                     <div class="actionBtns">
-                        <button class="upvote">⇧</button>
-                        <p>{{.VoteCount}}</p>
-                        <button class="downvote">⇩</button>
+                        <button class="upvote" hx-get="/updatemetric?postid={{.ID}}&action=up" hx-target="#vote-count-{{.ID}}" hx-swap="innerHTML">⇧</button>
+                        <p id="vote-count-{{.ID}}">{{.VoteCount}}</p>
+                        <button class="downvote" hx-get="/updatemetric?postid={{.ID}}&action=down" hx-target="#vote-count-{{.ID}}" hx-swap="innerHTML">⇩</button>
                     </div>
                     <p class="post-time">2 hours ago</p>
                 </div>

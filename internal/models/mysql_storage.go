@@ -142,7 +142,7 @@ func (m *MySQLUserStore) GetProfileFromEmail(email string) (*UserProfile, error)
 
 func (m *MySQLUserStore) MetricUpdate(action string, post_id int) error {
 	query := ""
-	
+
 	if action == "up"{
 		query = "UPDATE posts SET vote_count = vote_count + 1  WHERE id = ?;"
 	}else if action == "down"{
@@ -154,6 +154,19 @@ func (m *MySQLUserStore) MetricUpdate(action string, post_id int) error {
 		return err
 	}
 	return nil
+}
+
+func (m *MySQLUserStore) GetMetric(post_id int) (int, error) {
+
+	var count int 
+
+	query := "SELECT vote_count FROM posts WHERE id = ?"
+
+	err := m.DB.QueryRow(query, post_id).Scan(&count)
+	if err != nil{
+		return 0, err
+	}
+	return count, nil
 }
 
 func (m *MySQLUserStore) UpdateProfileFromEmail(email string, profile *UserProfile) error {

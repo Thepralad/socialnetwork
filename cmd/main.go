@@ -44,6 +44,7 @@ func main() {
 	mux.HandleFunc("/editprofile", postHandler.EditProfileHandler)
 	mux.HandleFunc("/getposts", postHandler.GetPostHandler)
 	mux.HandleFunc("/post", postHandler.PostHandler)
+	mux.HandleFunc("/updatemetric", postHandler.UpdateMetricHandler)
 
 	log.Print("starting server at :8080")
 	http.ListenAndServe(":8080", mux)

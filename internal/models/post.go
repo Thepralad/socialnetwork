@@ -15,7 +15,8 @@ type PostStore interface {
 	UpdateProfileFromEmail(email string, profile *UserProfile) error
     GetPosts(offset int) ([]Post, error)
     Post(email,content string) error
-    MetricUpdate(action, post_id int) error
+    MetricUpdate(action string, post_id int) error
+    GetMetric(post_id int) (int, error)
 }
 
 

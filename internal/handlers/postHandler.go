@@ -136,6 +136,8 @@ func (h *PostHandler) PostHandler(res http.ResponseWriter, req *http.Request){
 		http.Redirect(res, req, "/home", http.StatusSeeOther)
 }
 
+
+
 func (h *PostHandler) GetPostHandler(res http.ResponseWriter, req *http.Request) {
 	offsetStr := req.URL.Query().Get("offset")
 	offset := 0
@@ -159,4 +161,9 @@ func (h *PostHandler) GetPostHandler(res http.ResponseWriter, req *http.Request)
 		log.Printf("Template error: %v", err)
 		return
 	}
+}
+
+func (h *PostHandler) UpdateMetricHandler(res http.ResponseWriter, req *http.Request){
+	count := h.postService.UpdateMetric(req)
+	fmt.Fprint(res, count)
 }
