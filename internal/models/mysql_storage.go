@@ -203,3 +203,9 @@ func (m *MySQLUserStore) UpdateProfileFromEmail(email string, profile *UserProfi
 	}
 	return nil
 }
+
+// USER
+
+func (m *MySQLUserStore)Poke(to, from string){
+	
+}

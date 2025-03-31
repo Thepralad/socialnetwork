@@ -29,3 +29,8 @@ type UserStore interface {
 	VerifyUserByToken(token string) error
 	SetSessionToken(email, token string) error
 }
+
+type UserInteraction interface {
+	Poke(to, from string)
+	// GetEmailFromToken(token string) (string, error)
+}

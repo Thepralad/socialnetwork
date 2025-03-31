@@ -22,11 +22,12 @@ func main() {
 	if err := render.Init(); err != nil {
 		log.Fatal("Failed to initialize templates:", err)
 	}
-
+ 
 	store := models.MySQLUserStore{DB: db}
 
 	authHandler := handlers.NewAuthHandler(&store)
 	postHandler := handlers.NewPostHandler(&store)
+	userHandler := handlers.NewUserHandler(&store)
 
 	mux := http.NewServeMux()
  
@@ -41,10 +42,13 @@ func main() {
 	mux.HandleFunc("/logout", authHandler.LogoutHandler)
 	
 	mux.HandleFunc("/home", postHandler.HomePostHandler)
+	mux.HandleFunc("/home/", postHandler.UserProfileHandler)
 	mux.HandleFunc("/editprofile", postHandler.EditProfileHandler)
 	mux.HandleFunc("/getposts", postHandler.GetPostHandler)
 	mux.HandleFunc("/post", postHandler.PostHandler)
 	mux.HandleFunc("/updatemetric", postHandler.UpdateMetricHandler)
+
+	mux.HandleFunc("/poke", userHandler.PokeHandler)
 
 	log.Print("starting server at :8080")
 	http.ListenAndServe(":8080", mux)

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+    <!DOCTYPE html>
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
@@ -10,7 +10,7 @@
 <body>
 
 	 <div class="header">
-        header
+        SNET
     </div>
     <div class="left">
         <div class="profile">
@@ -62,7 +62,7 @@
             </form>
 
             <div class="post-contents" id="posts-container">
-            	{{range .Posts}}
+            	<!-- {{range .Posts}}
 
                 <div class="post">
                     <div class="upper-side">
@@ -81,7 +81,7 @@
                     <p class="post-time">2 hours ago</p>
                 </div>
 
-                {{end}}
+                {{end}} -->
             </div>
 
             <div
@@ -89,7 +89,7 @@
 			  hx-trigger="revealed"
 			  hx-target="#posts-container"
 			  hx-swap="beforeend"
-				>
+			>
 			  Loading posts...
 			</div>
         </div>

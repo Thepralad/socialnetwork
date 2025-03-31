@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body{
+            font-family: "Albert Sans", sans-serif;
+            font-weight: 200; 
+            font-size: 1.1rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+            font-size: 1rem;
+            gap: 1rem;
+        }
+        #back{
+            color: #0c4b93;
+            margin-right: 450px;
+        }
+        .container{
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            background-color: #fffffff7;
+            border: 1px solid #141414;
+            gap: 2rem;
+            width: 500px;
+            padding: 0.9rem;
+        }
+
+        #profile-details{
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+        }
+
+        img{
+            width: 220px;
+            height: 220px;
+            object-fit: cover;
+            border: 2px solid #141414;
+        }
+
+        button{
+            font-family: "Albert Sans", sans-serif; 
+            font-weight: 150;
+            padding: 0.5rem;
+            font-size: 1rem; 
+            border: 1px solid #141414;
+            width: 45%;
+            height: 35px;
+            font-size: 1rem;
+            background-color: #0d518c;
+            color: #ffffff;
+        }
+    </style>
+</head>
+<body>
+    <a href="/home" id="back">Back</a>
+    <div class="container">
+       
+        <h3 id="username">@{{.Profile.Username}}</h3>
+        <img src="{{.Profile.ImgURL}}" id="profile-pic" alt="profile picture">
+        <div id="profile-details">
+            <div id="email">
+                <span class="label"><strong>Email</strong></span>
+                <span class="data">{{.Profile.Email}}</span>
+            </div>
+            <div id="dept">
+                <span class="label"><strong>Dept</strong></span>
+                <span class="data">{{.Profile.Dept}} 🎓 | {{.Profile.Year}} Year</span>
+            </div>
+            <div id="gender">
+                <span class="label"><strong>Gender</strong></span>
+                <span class="data">{{.Profile.Gender}}</span>
+            </div>
+            <div id="relationship-status">
+                <span class="label"><strong>Relationship Status</strong></span>
+                <span class="data">{{.Profile.RelationshipStatus}}</span>
+            </div>
+            <div id="looking-for">
+                <span class="label"><strong>Looking for</strong></span>
+                <span class="data">{{.Profile.LookingFor}}</span>
+            </div>
+            <div id="fact-about-me">
+                <span class="label"><strong>Fact about me</strong></span>
+                <span class="data">{{.Profile.FactAboutMe}}</span>
+            </div>
+        </div>
+        <form action="/poke">
+            <button>Poke {{.Profile.Username}}</button>
+        </form>
+    </div>
+</body>
+</html>
