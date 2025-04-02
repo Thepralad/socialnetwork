@@ -1,10 +1,10 @@
 package mail
 
-import(
+import (
 	"net/smtp"
 )
 
-func SendEmail(to []string, subject string, body string) error{
+func SendEmail(to []string, subject string, body string) error {
 	auth := smtp.PlainAuth(
 		"",
 		"snetverify@gmail.com",
@@ -12,9 +12,9 @@ func SendEmail(to []string, subject string, body string) error{
 		"smtp.gmail.com",
 	)
 	message := "Subject: " + subject + "\r\n" +
-               "Content-Type: text/html; charset=\"utf-8\"\r\n" +
-               "\r\n" + 
-               body
+		"Content-Type: text/html; charset=\"utf-8\"\r\n" +
+		"\r\n" +
+		"<a href=\"" + body + "\">Press here to verify</a>"
 
-    return smtp.SendMail("smtp.gmail.com:587", auth, "snetverify@gmail.com", to, []byte(message))
+	return smtp.SendMail("smtp.gmail.com:587", auth, "snetverify@gmail.com", to, []byte(message))
 }

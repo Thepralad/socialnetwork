@@ -9,17 +9,23 @@ type User struct {
 	Token     string
 }
 type UserProfile struct {
-    Email            string
-    Username         string
-    InstagramLink    string
-    Gender           string
-    TopArtist        string
-    RelationshipStatus string
-    LookingFor       string
-    FactAboutMe      string
-    Dept 			 string
-    Year 			 string
-    ImgURL 			 string
+	Email              string
+	Username           string
+	InstagramLink      string
+	Gender             string
+	TopArtist          string
+	RelationshipStatus string
+	LookingFor         string
+	FactAboutMe        string
+	Dept               string
+	Year               string
+	ImgURL             string
+}
+
+type Poke struct {
+	Username string
+	Email    string
+	ImgURL   string
 }
 
 type UserStore interface {
@@ -32,5 +38,6 @@ type UserStore interface {
 
 type UserInteraction interface {
 	Poke(to, from string)
-	// GetEmailFromToken(token string) (string, error)
+	GetEmailFromToken(token string) (string, error)
+	GetPokes(email string) ([]Poke, error)
 }

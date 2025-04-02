@@ -35,10 +35,16 @@ func (h *PostHandler) HomePostHandler(res http.ResponseWriter, req *http.Request
 		if err != nil {
 			log.Print(err)
 		}
-		posts, _ := h.postService.GetPostsService(0) // Get initial posts
+		pokes, err := h.postService.GetPokesService(email)
+		if err != nil {
+			log.Print(err)
+		}
+		posts, _ := h.postService.GetPostsService(0)
+
 		data := map[string]interface{}{
 			"Profile": profile,
 			"Posts":   posts,
+			"Pokes":   pokes,
 		}
 
 		if err := render.Template(res, "feeds", data); err != nil {
@@ -159,14 +165,14 @@ func (h *PostHandler) GetPostHandler(res http.ResponseWriter, req *http.Request)
 					<img src="%s" class="post-profile-pic">
 					<div>
 						<p class="post-username">@%s</p>
-						<p class="post-email"><a href="http://localhost:8080/home/%s">%s</a></p>
+						<p class="post-email"><a href="http://snet.club/home/%s">%s</a></p>
 					</div>
 				</div>
 				<p class="post-text">%s</p>
 				<div class="actionBtns">
-					<button class="upvote" hx-get="/updatemetric?postid=%d&action=up" hx-target="#vote-count-%d" hx-swap="innerHTML">⇧</button>
+					<button class="upvote" hx-get="/updatemetric?postid=%d&action=up" hx-target="#vote-count-%d" hx-swap="innerHTML">⬆</button>
 					<p id="vote-count-%d">%d</p>
-					<button class="downvote" hx-get="/updatemetric?postid=%d&action=down" hx-target="#vote-count-%d" hx-swap="innerHTML">⇩</button>
+					<button class="downvote" hx-get="/updatemetric?postid=%d&action=down" hx-target="#vote-count-%d" hx-swap="innerHTML">⬇</button>
 				</div>
 				<p class="post-time">Just now</p>
 			</div>
@@ -175,8 +181,6 @@ func (h *PostHandler) GetPostHandler(res http.ResponseWriter, req *http.Request)
 	}
 
 }
-
-
 
 func (h *PostHandler) UserProfileHandler(res http.ResponseWriter, req *http.Request) {
 

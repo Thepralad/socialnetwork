@@ -30,9 +30,9 @@ func (store *PostService) AuthorizeUser(token string) (string, error) {
 	return email, nil
 }
 
-func (store *PostService) Post(email, content string) error{
+func (store *PostService) Post(email, content string) error {
 	err := store.postStore.Post(email, content)
-	if err != nil{
+	if err != nil {
 		log.Print(err)
 		return err
 	}
@@ -41,7 +41,7 @@ func (store *PostService) Post(email, content string) error{
 
 }
 
-func (store *PostService) UpdateMetric(req *http.Request) int{
+func (store *PostService) UpdateMetric(req *http.Request) int {
 	postIdStr := req.URL.Query().Get("postid")
 	action := req.URL.Query().Get("action")
 
@@ -55,13 +55,21 @@ func (store *PostService) UpdateMetric(req *http.Request) int{
 	return count
 }
 
-func (store *PostService) GetPostsService(offset int) ([]models.Post, error){
+func (store *PostService) GetPostsService(offset int) ([]models.Post, error) {
 	return store.postStore.GetPosts(offset)
+}
+
+func (store *PostService) GetPostsByUserService(email string) ([]models.Post, error) {
+	return store.postStore.GetPostsByUser(email)
+}
+
+func (store *PostService) GetPokesService(email string) ([]models.Poke, error) {
+	return store.postStore.GetPokes(email)
 }
 
 func (store *PostService) GetProfile(email string) (*models.UserProfile, error) {
 	profile, err := store.postStore.GetProfileFromEmail(email)
-	if err != nil{
+	if err != nil {
 		log.Print(err)
 		return nil, err
 	}
@@ -69,9 +77,9 @@ func (store *PostService) GetProfile(email string) (*models.UserProfile, error) 
 
 }
 
-func (store *PostService) UpdateProfile(email string, profile *models.UserProfile) error{
+func (store *PostService) UpdateProfile(email string, profile *models.UserProfile) error {
 	err := store.postStore.UpdateProfileFromEmail(email, profile)
-	if err != nil{
+	if err != nil {
 		log.Print(err)
 		return err
 	}

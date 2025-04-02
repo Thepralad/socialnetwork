@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <script src="https://unpkg.com/htmx.org@2.0.4"></script>
     <style>
         *{
             margin: 0;
@@ -96,8 +97,9 @@
                 <span class="data">{{.Profile.FactAboutMe}}</span>
             </div>
         </div>
-        <form action="/poke">
-            <button>Poke {{.Profile.Username}}</button>
+        <form hx-post="/poke" hx-target="#poke-btn" hx-swap="innerHTML">
+            <input type="hidden" name="receiver" value="{{.Profile.Email}}">
+            <button type="submit" id="poke-btn">Poke {{.Profile.Username}}</button>
         </form>
     </div>
 </body>

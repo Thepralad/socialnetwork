@@ -20,6 +20,12 @@ func NewAuthService(store models.UserStore) *AuthService {
 
 // Business logic for Registering user - Returns the status message
 func (s *AuthService) RegisterUser(email, password string) (string, error) {
+
+	isValidEmail := security.IsSalesianEmail(email)
+	if !isValidEmail {
+		return "Only @salesiancollege.net emails hehe", nil
+	}
+
 	//Checks if user already exists
 	userAlreadyExist, err := s.userStore.GetUserByEmail(email)
 	if userAlreadyExist != nil {
@@ -28,7 +34,7 @@ func (s *AuthService) RegisterUser(email, password string) (string, error) {
 
 	//Ensuring the password is or more than 8 character
 	if len(password) < 8 {
-		return "Password atleast 8 characters", nil
+		return "I guess the password is not so strong...", nil
 	}
 
 	//Encrypting password using bcrypt
@@ -36,7 +42,7 @@ func (s *AuthService) RegisterUser(email, password string) (string, error) {
 	verificationToken := token.GenerateToken()
 	//If no above condition is met, the email and password in inserted to the DB
 	s.userStore.CreateUser(email, hashedPassword, verificationToken)
-	message := "http://localhost:8080/verify?token=" + verificationToken
+	message := "http://snet.club/verify?token=" + verificationToken
 
 	err = mail.SendEmail([]string{email}, "Welcome to SNET!", message)
 	if err != nil {
@@ -78,13 +84,13 @@ func (s *AuthService) AddSessionToken(email string, res http.ResponseWriter) {
 
 	//Set Cookie with proper attributes
 	http.SetCookie(res, &http.Cookie{
-		Name:     "session_token",
-		Value:    sessionToken,
-		MaxAge:   3600, // 1 hour
+		Name:   "session_token",
+		Value:  sessionToken,
+		MaxAge: 2592000, // 30 days
 	})
 }
 
-func (s *AuthService) RemoveSessionToken(res http.ResponseWriter){
+func (s *AuthService) RemoveSessionToken(res http.ResponseWriter) {
 	http.SetCookie(res, &http.Cookie{
 		Name:   "session_token",
 		Value:  "",

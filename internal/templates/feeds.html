@@ -1,16 +1,84 @@
-    <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Home</title>
-	<link rel="stylesheet" type="text/css" href="static/styles/feeds.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Albert+Sans:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="static/styles/feeds.css">
     <script src="https://unpkg.com/htmx.org@2.0.4"></script>
 </head>
 <body>
-
-	 <div class="header">
-        SNET
+    <div class="header">
+        <h1>SNET</h1>
+        <div>
+            <button class="profile-btn">🫵🏻</button>
+            <button class="pokes-btn">🔔</button>
+        </div>
+        <span class="hamburger">☰</span>
+        <div class="navbar">
+            <div>
+                <img src="static/icons/search-icon.png" alt="">
+                <a href="">Search</a>
+            </div>
+            <div>
+                <img src="static/icons/edit-icon.png" alt="">
+                <a href="/editprofile">Edit Profile</a>
+            </div>
+            <div>
+                <img src="static/icons/about-us-icon.png" alt="">
+                <a href="">About us</a>
+            </div>
+            <div>
+                <img src="static/icons/logout-icon.png" alt="">
+                <a href="/logout">Logout</a>
+            </div>
+        </div>
+    </div>
+    <div class="modal profile-modal">
+        <div class="modal-content">
+            <div class="profile">
+                <h3 id="username">@{{.Profile.Username}}</h3>
+                <img src="{{.Profile.ImgURL}}" id="profile-pic" alt="profile picture">
+                <div id="profile-details">
+                    <div id="email">
+                        <span class="label"><strong>Email</strong></span>
+                        <span class="data">{{.Profile.Email}}</span>
+                    </div>
+                    <div id="dept">
+                        <span class="label"><strong>Dept</strong></span>
+                        <span class="data">{{.Profile.Dept}} 🎓 | {{.Profile.Year}} Year</span>
+                    </div>
+                    <div id="gender">
+                        <span class="label"><strong>Gender</strong></span>
+                        <span class="data">{{.Profile.Gender}}</span>
+                    </div>
+                    <div id="relationship-status">
+                        <span class="label"><strong>Relatsh</strong></span>
+                        <span class="data">{{.Profile.RelationshipStatus}}</span>
+                    </div>
+                    <div id="looking-for">
+                        <span class="label"><strong>Looking for</strong></span>
+                        <span class="data">{{.Profile.LookingFor}}</span>
+                    </div>
+                    <div id="fact-about-me">
+                        <span class="label"><strong>Fact about me</strong></span>
+                        <span class="data">{{.Profile.FactAboutMe}}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal pokes-modal">
+        <div class="modal-content">
+            <div class="pokes-container">
+                <h3>People who poked you</h3>
+                <div class="pokes" id="pokes" hx-get="/pokes" hx-trigger="every 5s" hx-target="#pokes" hx-swap="outerHTML">
+                </div>
+            </div>
+        </div>
     </div>
     <div class="left">
         <div class="profile">
@@ -42,7 +110,6 @@
                     <span class="data">{{.Profile.FactAboutMe}}</span>
                 </div>
             </div>
-
             <div class="actionBtns">
                 <form action="/editprofile">
                     <button type="submit" id="editProfileBtn">Edit</button>
@@ -53,50 +120,68 @@
             </div>
         </div>
     </div>
-
     <div class="mid">
         <div class="postInput">
             <form action="/post">
                 <textarea name="content" placeholder="What's going on campus....."></textarea>
                 <button type="submit">Post</button>
             </form>
-
             <div class="post-contents" id="posts-container">
-            	<!-- {{range .Posts}}
-
-                <div class="post">
-                    <div class="upper-side">
-                        <img src="{{.ImgURL}}" class="post-profile-pic">
-                        <div>
-                            <p class="post-username">@{{.Username}}</p>
-                            <p class="post-email"><a href="">{{.Email}}</a></p>
-                        </div>
-                    </div>
-                    <p class="post-text">{{.Content}}</p>
-                    <div class="actionBtns">
-                        <button class="upvote" hx-get="/updatemetric?postid={{.ID}}&action=up" hx-target="#vote-count-{{.ID}}" hx-swap="innerHTML">⇧</button>
-                        <p id="vote-count-{{.ID}}">{{.VoteCount}}</p>
-                        <button class="downvote" hx-get="/updatemetric?postid={{.ID}}&action=down" hx-target="#vote-count-{{.ID}}" hx-swap="innerHTML">⇩</button>
-                    </div>
-                    <p class="post-time">2 hours ago</p>
-                </div>
-
-                {{end}} -->
             </div>
-
-            <div
-			  hx-get="/getposts?offset=0"
-			  hx-trigger="revealed"
-			  hx-target="#posts-container"
-			  hx-swap="beforeend"
-			>
-			  Loading posts...
-			</div>
+            <div hx-get="/getposts?offset=0" hx-trigger="revealed" hx-target="#posts-container" hx-swap="beforeend">   
+            </div>
         </div>
     </div>  
-
     <div class="right">
-        right
+        <div class="pokes-container">
+            <h3>People who poked you</h3>
+            <div class="pokes" id="pokes" hx-get="/pokes" hx-trigger="every 5s" hx-target="#pokes" hx-swap="outerHTML">
+            </div>
+        </div>
+        <div class="upcoming-events">
+            <h3>Upcoming Event</h3>
+            <div class="event">
+                <p class="event-date">28 March 2025</p>
+                <div class="event-title">
+                    <h5>Salesian Fiesta</h5>
+                    <p class="description">Celebrating Culture & Education</p>
+                </div>
+            </div>
+        </div>
     </div>
+    <script>
+        const profileBtn = document.querySelector('.profile-btn');
+        const pokesBtn = document.querySelector('.pokes-btn');
+        const profileModal = document.querySelector('.profile-modal');
+        const pokesModal = document.querySelector('.pokes-modal');
+        const hamburger = document.querySelector('.hamburger');
+        const navbar = document.querySelector('.navbar');
+
+        profileBtn.addEventListener('click', () => {
+            profileModal.classList.toggle('active');
+            pokesModal.classList.remove('active');
+        });
+
+        pokesBtn.addEventListener('click', () => {
+            pokesModal.classList.toggle('active');
+            profileModal.classList.remove('active');
+        });
+
+        profileModal.addEventListener('click', (e) => {
+            if (e.target === profileModal) {
+                profileModal.classList.remove('active');
+            }
+        });
+
+        pokesModal.addEventListener('click', (e) => {
+            if (e.target === pokesModal) {
+                pokesModal.classList.remove('active');
+            }
+        });
+
+        hamburger.addEventListener('click', () => {
+            navbar.classList.toggle('active');
+        });
+    </script>
 </body>
 </html>

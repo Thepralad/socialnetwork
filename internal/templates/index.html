@@ -5,35 +5,14 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Register - Social Network</title>
 	<link rel="stylesheet" type="text/css" href="static/styles/index.css">
+	<script src="https://unpkg.com/htmx.org@2.0.4"></script>
 </head>
 <body>
-	<!-- <div class="form-container">
-		<h2>Register</h2>
-		{{if .Error}}
-		<p class="error">{{.Error}}</p>
-		{{end}}
-		<form method="POST" action="/register" id="registerForm">
-			<div class="form-group">
-				<input type="email" name="email" placeholder="Email" required>
-			</div>
-			<div class="form-group">
-				<input type="password" name="password" placeholder="Password (min. 8 characters)" required minlength="8">
-			</div>
-			<button type="submit">
-				<span class="button-text">Register</span>
-				<span class="spinner"></span>
-			</button>
-		</form>
-		<div class="login-link">
-			Already have an account? <a href="/login">Login</a>
-		</div>
-	</div> -->
-
 	<div class="container">
 	    <div class="signup-container">
 	      <h1>Join SNET</h1>
-	      <p>Getting in is easy, to an online directory just for the students of Salesian 🎓. <br>Already in? <a href="/login">Log in</a></p>
-	      <form action="/register" method="POST">
+	      <p>Getting in is easy, to an online directory just for the students of Salesian . <br>Already in? <a href="/login">Log in</a></p>
+	      <form id="registerForm" hx-post="/register" hx-target="#error" hx-swap="innerHTML">
 	        <input type="email" name="email" placeholder="e.g. yourname@salesiancollege.net" required>
 	        <input type="password" name="password" placeholder="Password" required>
 	        <!-- <input type="password" name="confirm" placeholder="Confirm" required> -->
@@ -41,10 +20,8 @@
 				<span class="button-text">Jump in</span>
 				<span class="spinner"></span>
 			</button>
+			<div id="error" class="error">{{if .Error}}{{.Error}}{{end}}</div>
 	      </form>
-	      	{{if .Error}}
-			<p class="error">{{.Error}}</p>
-			{{end}}
 	    </div>
   	</div>
 
@@ -63,7 +40,7 @@
 			const spinner = button.querySelector('.spinner');
 			
 			button.disabled = true;
-			buttonText.textContent = 'Registering...';
+			buttonText.textContent = 'Hold on.....';
 			spinner.style.display = 'block';
 		});
 	</script>

@@ -74,10 +74,10 @@ func extractUsername(email string) string {
 // -----POSTS-----
 
 // Inserts a new row in [snet.posts] with (email, content)
-func (m *MySQLUserStore) Post(email,content string) error {
+func (m *MySQLUserStore) Post(email, content string) error {
 	query := "INSERT INTO posts(email, content) VALUES(?, ?)"
-	_, err := m.DB.Exec(query, email, content) 
-	if err != nil{
+	_, err := m.DB.Exec(query, email, content)
+	if err != nil {
 		return err
 	}
 	return nil
@@ -102,7 +102,38 @@ func (m *MySQLUserStore) GetPosts(offset int) ([]Post, error) {
 	if err != nil {
 		return nil, err
 	}
- 
+
+	defer rows.Close()
+
+	var posts []Post
+	for rows.Next() {
+		var p Post
+		rows.Scan(&p.ID, &p.Email, &p.Username, &p.ImgURL, &p.Content, &p.VoteCount)
+		posts = append(posts, p)
+	}
+
+	return posts, nil
+}
+
+func (m *MySQLUserStore) GetPostsByUser(email string) ([]Post, error) {
+	query := `
+		SELECT 
+		p.id, 
+		p.email, 
+		COALESCE(u.username, 'Unknown') AS username, 
+		COALESCE(u.img_url, 'default.jpg') AS img_url, 
+		p.content, 
+		p.vote_count 
+		FROM posts p
+		LEFT JOIN user_profiles u ON p.email = u.email
+		WHERE p.email = ?
+		ORDER BY p.created_at DESC;
+		`
+	rows, err := m.DB.Query(query, email)
+	if err != nil {
+		return nil, err
+	}
+
 	defer rows.Close()
 
 	var posts []Post
@@ -126,7 +157,7 @@ func (m *MySQLUserStore) GetEmailFromToken(token string) (string, error) {
 	return email, err
 }
 
-// Retrieves *UserProfile using email [snet.user_profiles] 
+// Retrieves *UserProfile using email [snet.user_profiles]
 func (m *MySQLUserStore) GetProfileFromEmail(email string) (*UserProfile, error) {
 	var profile UserProfile
 	query := `SELECT email, username, instagram_link, gender, top_artist, relationship_status, looking_for, fact_about_me, dept, year, img_url
@@ -154,27 +185,26 @@ func (m *MySQLUserStore) GetProfileFromEmail(email string) (*UserProfile, error)
 func (m *MySQLUserStore) MetricUpdate(action string, post_id int) error {
 	query := ""
 
-	if action == "up"{
+	if action == "up" {
 		query = "UPDATE posts SET vote_count = vote_count + 1  WHERE id = ?;"
-	}else if action == "down"{
+	} else if action == "down" {
 		query = "UPDATE posts SET vote_count = vote_count - 1  WHERE id = ?;"
 	}
 
 	_, err := m.DB.Exec(query, post_id)
-	if err != nil{
+	if err != nil {
 		return err
 	}
 	return nil
 }
 
-
 func (m *MySQLUserStore) GetMetric(post_id int) (int, error) {
-	var count int 
+	var count int
 
 	query := "SELECT vote_count FROM posts WHERE id = ?"
 
 	err := m.DB.QueryRow(query, post_id).Scan(&count)
-	if err != nil{
+	if err != nil {
 		return 0, err
 	}
 	return count, nil
@@ -204,8 +234,31 @@ func (m *MySQLUserStore) UpdateProfileFromEmail(email string, profile *UserProfi
 	return nil
 }
 
+func (m *MySQLUserStore) GetPokes(email string) ([]Poke, error) {
+	query := "SELECT u.username, u.img_url, p.sender FROM pokes p JOIN user_profiles u ON p.sender = u.email WHERE p.receiver = ?;"
+
+	rows, err := m.DB.Query(query, email)
+	if err != nil {
+		return nil, err
+	}
+
+	defer rows.Close()
+
+	var pokes []Poke
+	for rows.Next() {
+		var p Poke
+		rows.Scan(&p.Username, &p.ImgURL, &p.Email)
+		pokes = append(pokes, p)
+	}
+
+	return pokes, nil
+}
+
 // USER
 
-func (m *MySQLUserStore)Poke(to, from string){
-	
+func (m *MySQLUserStore) Poke(to, from string) {
+	_, err := m.DB.Exec("INSERT INTO pokes (sender, receiver) VALUES (?, ?)", to, from)
+	if err != nil {
+		log.Fatal(err)
+	}
 }

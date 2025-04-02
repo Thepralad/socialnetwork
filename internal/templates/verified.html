@@ -4,10 +4,47 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>[snet]</title>
+    <style>
+        body {
+            background-color: #e9e9e9f7;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+            font-family: "Albert Sans", sans-serif;
+            font-weight: 200; 
+            font-size: 1.1rem;
+            gap: 0.4rem;
+        }
+
+        h2 {
+            font-size: 3rem;
+        }
+
+        a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        img {
+            width: 200px;
+            height: auto;
+            max-width: 300px;
+        }
+
+        @media (max-width: 768px) {
+            img {
+                max-width: 200px;
+            }
+        }
+    </style>
+    
 </head>
+
 <body>
-    <h2>Verified</h2>
-    <p>Your account has been verified</p>
-    <a href="/login">Login</a>
+    <h2>Verified!</h2>
+    <img src="/static/img/salesiancollege-logo.png" alt="Salesian College logo">
+    <p>Now you can <a href="/login">Login</a></p>
 </body>
 </html>
