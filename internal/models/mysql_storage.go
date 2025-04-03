@@ -235,7 +235,7 @@ func (m *MySQLUserStore) UpdateProfileFromEmail(email string, profile *UserProfi
 }
 
 func (m *MySQLUserStore) GetPokes(email string) ([]Poke, error) {
-	query := "SELECT u.username, u.img_url, p.sender FROM pokes p JOIN user_profiles u ON p.sender = u.email WHERE p.receiver = ?;"
+	query := "SELECT u.username, u.img_url, u.email FROM pokes p JOIN user_profiles u ON p.sender = u.email WHERE p.receiver = ?;"
 
 	rows, err := m.DB.Query(query, email)
 	if err != nil {
@@ -247,7 +247,11 @@ func (m *MySQLUserStore) GetPokes(email string) ([]Poke, error) {
 	var pokes []Poke
 	for rows.Next() {
 		var p Poke
-		rows.Scan(&p.Username, &p.ImgURL, &p.Email)
+		err := rows.Scan(&p.Username, &p.ImgURL, &p.Email)
+		if err != nil {
+			log.Printf("Error scanning row: %v", err)
+			continue
+		}
 		pokes = append(pokes, p)
 	}
 
@@ -259,6 +263,6 @@ func (m *MySQLUserStore) GetPokes(email string) ([]Poke, error) {
 func (m *MySQLUserStore) Poke(to, from string) {
 	_, err := m.DB.Exec("INSERT INTO pokes (sender, receiver) VALUES (?, ?)", to, from)
 	if err != nil {
-		log.Fatal(err)
+		log.Print(err)
 	}
 }

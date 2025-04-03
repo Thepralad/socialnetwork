@@ -343,7 +343,6 @@
         font-size: 1.5rem;
         font-weight: 500;
     }
-
     @media (max-width: 1024px) {
         body {
             grid-template-areas: 
@@ -378,9 +377,7 @@
         #editProfileBtn, #logoutBtn {
             width: 100%;
         }
-        .profile-btn, .pokes-btn {
-            display: inline-block;
-        }
+        
         .profile-btn{
             margin-left: 220px;
         }
@@ -393,6 +390,9 @@
     }
 
     @media (max-width: 768px) {
+        .icons {
+            display: flex;
+        }
         .header .navbar {
             display: none;
             flex-direction: column;
@@ -407,7 +407,7 @@
         .header .navbar.active {
             display: flex;
         }
-        .hamburger {
+        .hamburger { 
             display: block;
         }
         .postInput button {

@@ -28,34 +28,52 @@ func (h *UserHandler) PokeHandler(res http.ResponseWriter, req *http.Request) {
 }
 
 func (h *UserHandler) PokesHandler(res http.ResponseWriter, req *http.Request) {
-	token, _ := req.Cookie("session_token")
-	if token.Value == "" {
+	token, err := req.Cookie("session_token")
+	if err != nil || token.Value == "" {
 		http.Redirect(res, req, "/login", http.StatusFound)
 		return
 	}
 
-	email, _ := h.userService.AuthorizeUser(token.Value)
-	t, _ := template.New("pokes").Parse(`{{range .Pokes}}
+	email, err := h.userService.AuthorizeUser(token.Value)
+	if err != nil {
+		log.Printf("Error authorizing user: %v", err)
+		http.Redirect(res, req, "/login", http.StatusFound)
+		return
+	}
+
+	t, err := template.New("pokes").Parse(`{{range .Pokes}}
 							<div class="poke-item">
 								<img src="{{.ImgURL}}" alt="">
 								<div class="poke-info">
-									<p>@{{.Username}}</p>
-									<p><a href="#">{{.Email}}</a></p>
+									<p><a href="http://snet.club/home/{{.Email}}">@{{.Username}}</a></p>
 								</div>
 								<form hx-post="/pokeback?email={{.Email}}" hx-target="this" hx-swap="outerHTML">
-									<button type="submit" class="poke-back-btn">Poke Back</button>
+									<button type="submit" class="poke-back-btn">Poke</button>
 								</form>
 							</div>
 						{{end}}`)
-	pokes, _ := h.userService.GetPokesService(email)
+	if err != nil {
+		log.Printf("Template error: %v", err)
+		http.Error(res, "Internal server error", http.StatusInternalServerError)
+		return
+	}
+
+	pokes, err := h.userService.GetPokesService(email)
+	if err != nil {
+		log.Printf("Error getting pokes: %v", err)
+		http.Error(res, "Internal server error", http.StatusInternalServerError)
+		return
+	}
+
 	data := struct {
 		Pokes []models.Poke
 	}{
 		Pokes: pokes,
 	}
-	err := t.Execute(res, data)
-	if err != nil {
-		log.Printf("Template error: %v", err)
+
+	if err := t.Execute(res, data); err != nil {
+		log.Printf("Template execution error: %v", err)
+		http.Error(res, "Internal server error", http.StatusInternalServerError)
 		return
 	}
 }

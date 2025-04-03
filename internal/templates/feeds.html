@@ -13,7 +13,7 @@
 <body>
     <div class="header">
         <h1>SNET</h1>
-        <div>
+        <div class="icons">
             <button class="profile-btn">🫵🏻</button>
             <button class="pokes-btn">🔔</button>
         </div>
@@ -75,7 +75,7 @@
         <div class="modal-content">
             <div class="pokes-container">
                 <h3>People who poked you</h3>
-                <div class="pokes" id="pokes" hx-get="/pokes" hx-trigger="every 5s" hx-target="#pokes" hx-swap="outerHTML">
+                <div class="pokes" id="pokes-modal" hx-get="/pokes" hx-trigger="every 2s">
                 </div>
             </div>
         </div>
@@ -135,7 +135,7 @@
     <div class="right">
         <div class="pokes-container">
             <h3>People who poked you</h3>
-            <div class="pokes" id="pokes" hx-get="/pokes" hx-trigger="every 5s" hx-target="#pokes" hx-swap="outerHTML">
+            <div class="pokes" id="pokes" hx-get="/pokes" hx-trigger="every 5s">
             </div>
         </div>
         <div class="upcoming-events">
@@ -149,6 +149,7 @@
             </div>
         </div>
     </div>
+
     <script>
         const profileBtn = document.querySelector('.profile-btn');
         const pokesBtn = document.querySelector('.pokes-btn');
